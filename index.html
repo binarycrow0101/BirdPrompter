@@ -1,196 +1,183 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bird Spotter</title>
-  <style>
-    body {
-      background: #e6f0ec;
-      font-family: 'Georgia', serif;
-      color: #2c3e34;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+// --- Bird data setup (future-proofed for filtering) ---
+const birds = [
+  {
+    name: "European Robin",
+    color: "#E25822",
+    region: "Europe",
+    habitat: "forest",
+  },
+  {
+    name: "Blue Jay",
+    color: "#3A75C4",
+    region: "North America",
+    habitat: "forest",
+  },
+  {
+    name: "Great Tit",
+    color: "#E5E500",
+    region: "Europe",
+    habitat: "garden",
+  },
+  {
+    name: "Blackbird",
+    color: "#111111",
+    region: "Europe",
+    habitat: "forest",
+  },
+  {
+    name: "Barn Owl",
+    color: "#F5E6C5",
+    region: "Europe",
+    habitat: "open fields",
+  },
+  {
+    name: "Red Cardinal",
+    color: "#C41E3A",
+    region: "North America",
+    habitat: "woodland",
+  },
+  {
+    name: "Magpie",
+    color: "#FFFFFF",
+    region: "Europe",
+    habitat: "urban",
+  },
+  {
+    name: "Goldfinch",
+    color: "#FFD700",
+    region: "Europe",
+    habitat: "meadows",
+  },
+  {
+    name: "Kingfisher",
+    color: "#00BFFF",
+    region: "Europe",
+    habitat: "water",
+  },
+  {
+    name: "Sparrow",
+    color: "#8B5A2B",
+    region: "Europe",
+    habitat: "urban",
+  },
+];
+
+export default function BirdWatcher() {
+  const [bird, setBird] = useState(null);
+  const [journal, setJournal] = useState([]);
+  const [showJournal, setShowJournal] = useState(false);
+
+  // --- Pick a random bird ---
+  const getRandomBird = () => {
+    const randomBird = birds[Math.floor(Math.random() * birds.length)];
+    setBird(randomBird);
+    if (!journal.find((b) => b.name === randomBird.name)) {
+      setJournal([...journal, randomBird]);
     }
+  };
 
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 0.5em;
+  // --- Utility: check color brightness ---
+  const isLightColor = (color) => {
+    const hex = color.replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 200;
+  };
+
+  // --- Style: adjust text color & outline ---
+  const getTextColorStyle = (color) => {
+    if (isLightColor(color)) {
+      return {
+        color: color,
+        textShadow: "0 0 2px #000, 0 0 4px #000",
+      };
     }
+    return { color };
+  };
 
-    .binocular-frame {
-      width: 350px;
-      height: 200px;
-      background: radial-gradient(ellipse at center, #000 30%, #222 70%);
-      border-radius: 100px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  // --- Style: tint background softly based on bird color ---
+  const getCardStyle = (color) => {
+    const light = isLightColor(color);
+    return {
+      backgroundColor: light
+        ? "#f4f4f4"
+        : `${color}20`, // semi-transparent tint of main color
+      borderColor: `${color}60`,
+    };
+  };
 
-    .bird {
-      transition: transform 0.8s ease;
-      max-width: 70%;
-    }
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen gap-6 p-4 bg-gradient-to-b from-sky-200 to-sky-500">
+      <motion.div
+        key={bird ? bird.name : "empty"}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+      >
+        <Card
+          className="w-80 h-80 flex items-center justify-center shadow-xl rounded-2xl border-2"
+          style={bird ? getCardStyle(bird.color) : {}}
+        >
+          <CardContent className="text-center">
+            {bird ? (
+              <>
+                <motion.img
+                  src={`/birds/${bird.name.replace(/\s+/g, "_")}.jpg`}
+                  alt={bird.name}
+                  className="mx-auto rounded-xl w-64 h-48 object-cover"
+                  initial={{ scale: 1 }}
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                  }}
+                />
+                <h2
+                  className="mt-4 text-2xl font-bold"
+                  style={getTextColorStyle(bird.color)}
+                >
+                  {bird.name}
+                </h2>
+              </>
+            ) : (
+              <p className="text-gray-500">Press Spot Bird to Begin</p>
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
 
-    .spin-btn {
-      margin-top: 20px;
-      padding: 12px 20px;
-      font-size: 1rem;
-      border: none;
-      background: #4a7a5e;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .spin-btn:hover {
-      background: #366046;
-    }
+      <div className="flex gap-4">
+        <Button onClick={getRandomBird}>Spot Bird</Button>
+        <Button variant="outline" onClick={() => setShowJournal(!showJournal)}>
+          {showJournal ? "Hide Journal" : "Show Journal"}
+        </Button>
+      </div>
 
-    .journal {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background: #f8f5e6;
-      border: 2px solid #b6a77b;
-      border-radius: 10px;
-      width: 240px;
-      max-height: 60vh;
-      overflow-y: auto;
-      transition: all 0.4s ease;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-    }
-
-    .journal.collapsed {
-      height: 40px;
-      width: 120px;
-      overflow: hidden;
-    }
-
-    .journal-header {
-      background: #d2c6a3;
-      padding: 8px;
-      cursor: pointer;
-      text-align: center;
-      font-weight: bold;
-      border-bottom: 2px solid #b6a77b;
-    }
-
-    .journal-content {
-      padding: 10px;
-      font-size: 0.9rem;
-    }
-  </style>
-</head>
-<body>
-  <h1>Bird Spotter</h1>
-
-  <div class="binocular-frame">
-    <img id="birdImage" class="bird" src="https://placehold.co/200x100?text=Bird" alt="Bird">
-  </div>
-
-  <button class="spin-btn" id="spinBtn">Spot a Bird!</button>
-
-  <div class="journal collapsed" id="journal">
-    <div class="journal-header" id="journalHeader">Bird Journal</div>
-    <div class="journal-content" id="journalContent"></div>
-  </div>
-
-  <script>
-    const birds = [
-      // 🇪🇺 European Birds
-      { name: "European Robin", region: "Europe" },
-      { name: "Eurasian Blue Tit", region: "Europe" },
-      { name: "Great Tit", region: "Europe" },
-      { name: "Blackbird", region: "Europe" },
-      { name: "Chaffinch", region: "Europe" },
-      { name: "European Goldfinch", region: "Europe" },
-      { name: "Eurasian Wren", region: "Europe" },
-      { name: "Magpie", region: "Europe" },
-      { name: "Jay", region: "Europe" },
-      { name: "Common Kingfisher", region: "Europe" },
-      { name: "Barn Owl", region: "Europe" },
-      { name: "Eurasian Nuthatch", region: "Europe" },
-      { name: "Song Thrush", region: "Europe" },
-      { name: "Starling", region: "Europe" },
-      { name: "Wood Pigeon", region: "Europe" },
-      { name: "Carrion Crow", region: "Europe" },
-      { name: "House Sparrow", region: "Europe" },
-      { name: "Pied Wagtail", region: "Europe" },
-      { name: "European Green Woodpecker", region: "Europe" },
-      { name: "Eurasian Bullfinch", region: "Europe" },
-
-      // 🇺🇸 North American Birds
-      { name: "Northern Cardinal", region: "North America" },
-      { name: "Blue Jay", region: "North America" },
-      { name: "American Robin", region: "North America" },
-      { name: "Black-capped Chickadee", region: "North America" },
-      { name: "American Goldfinch", region: "North America" },
-      { name: "Downy Woodpecker", region: "North America" },
-      { name: "Red-winged Blackbird", region: "North America" },
-      { name: "Baltimore Oriole", region: "North America" },
-      { name: "Eastern Bluebird", region: "North America" },
-      { name: "Tufted Titmouse", region: "North America" },
-      { name: "Mourning Dove", region: "North America" },
-      { name: "Northern Flicker", region: "North America" },
-      { name: "American Crow", region: "North America" },
-      { name: "Carolina Wren", region: "North America" },
-      { name: "White-breasted Nuthatch", region: "North America" },
-      { name: "Tree Swallow", region: "North America" },
-      { name: "Cedar Waxwing", region: "North America" },
-      { name: "Red-tailed Hawk", region: "North America" },
-      { name: "Great Horned Owl", region: "North America" },
-      { name: "American Kestrel", region: "North America" }
-    ];
-
-    let spotted = JSON.parse(localStorage.getItem('spottedBirds')) || [];
-
-    const birdImage = document.getElementById('birdImage');
-    const spinBtn = document.getElementById('spinBtn');
-    const journal = document.getElementById('journal');
-    const journalHeader = document.getElementById('journalHeader');
-    const journalContent = document.getElementById('journalContent');
-
-    function updateJournal() {
-      if (!spotted.length) {
-        journalContent.innerHTML = '<em>No birds spotted yet.</em>';
-        return;
-      }
-      journalContent.innerHTML = spotted
-        .map(b => `<div>🪶 <strong>${b.name}</strong> <span style="color:#6a7c6e;">(${b.region})</span></div>`)
-        .join('');
-    }
-
-    function spinBird() {
-      birdImage.style.transform = 'scale(0.8)';
-      setTimeout(() => {
-        const randomBird = birds[Math.floor(Math.random() * birds.length)];
-        birdImage.src = "https://placehold.co/200x100?text=" + encodeURIComponent(randomBird.name);
-        birdImage.alt = randomBird.name;
-        birdImage.style.transform = 'scale(1)';
-        if (!spotted.some(b => b.name === randomBird.name)) {
-          spotted.push(randomBird);
-          localStorage.setItem('spottedBirds', JSON.stringify(spotted));
-        }
-        updateJournal();
-      }, 600);
-    }
-
-    spinBtn.addEventListener('click', spinBird);
-    journalHeader.addEventListener('click', () => {
-      journal.classList.toggle('collapsed');
-    });
-
-    updateJournal();
-  </script>
-</body>
-</html>
+      {showJournal && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          transition={{ duration: 0.4 }}
+          className="w-80 mt-4 bg-white/80 rounded-xl shadow-md p-3"
+        >
+          <h3 className="font-semibold mb-2">Bird Watcher's Journal</h3>
+          <ul className="space-y-1">
+            {journal.map((b, i) => (
+              <li key={i} style={{ color: b.color }}>
+                {b.name}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bird Spotter</title>
+  <style>
+    body {
+      background: #e6f0ec;
+      font-family: 'Georgia', serif;
+      color: #2c3e34;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5em;
+    }
+
+    .binocular-frame {
+      width: 350px;
+      height: 200px;
+      background: radial-gradient(ellipse at center, #000 30%, #222 70%);
+      border-radius: 100px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bird {
+      transition: transform 0.8s ease;
+      max-width: 70%;
+    }
+
+    .spin-btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      background: #4a7a5e;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .spin-btn:hover {
+      background: #366046;
+    }
+
+    .journal {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: #f8f5e6;
+      border: 2px solid #b6a77b;
+      border-radius: 10px;
+      width: 220px;
+      max-height: 60vh;
+      overflow-y: auto;
+      transition: all 0.4s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .journal.collapsed {
+      height: 40px;
+      width: 120px;
+      overflow: hidden;
+    }
+
+    .journal-header {
+      background: #d2c6a3;
+      padding: 8px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: bold;
+      border-bottom: 2px solid #b6a77b;
+    }
+
+    .journal-content {
+      padding: 10px;
+      font-size: 0.9rem;
+    }
+
+    .flicker {
+      animation: flicker 1s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.8;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Bird Spotter</h1>
+
+  <div class="binocular-frame">
+    <img id="birdImage" class="bird flicker" src="https://placehold.co/200x100?text=Bird" alt="Bird">
+  </div>
+
+  <button class="spin-btn" id="spinBtn">Spot a Bird!</button>
+
+  <div class="journal collapsed" id="journal">
+    <div class="journal-header" id="journalHeader">Bird Journal</div>
+    <div class="journal-content" id="journalContent"></div>
+  </div>
+
+  <script>
+    const birds = [
+      "Robin", "Blackbird", "Blue Jay", "Cardinal", "Goldfinch", "Sparrow",
+      "Woodpecker", "Magpie", "Wren", "Crow", "Raven", "Chickadee", "Oriole",
+      "Warbler", "Nuthatch", "Swallow", "Titmouse", "Dove", "Hawk", "Eagle",
+      "Owl", "Kingfisher", "Heron", "Starling", "Lark", "Thrush", "Jay",
+      "Grosbeak", "Sandpiper", "Plover"
+    ];
+
+    let spotted = JSON.parse(localStorage.getItem('spottedBirds')) || [];
+
+    const birdImage = document.getElementById('birdImage');
+    const spinBtn = document.getElementById('spinBtn');
+    const journal = document.getElementById('journal');
+    const journalHeader = document.getElementById('journalHeader');
+    const journalContent = document.getElementById('journalContent');
+
+    function updateJournal() {
+      journalContent.innerHTML = spotted.length
+        ? spotted.map(b => `<div>🪶 ${b}</div>`).join('')
+        : '<em>No birds spotted yet.</em>';
+    }
+
+    function spinBird() {
+      birdImage.style.transform = 'scale(0.8)';
+      setTimeout(() => {
+        const randomBird = birds[Math.floor(Math.random() * birds.length)];
+        birdImage.src = "https://placehold.co/200x100?text=" + encodeURIComponent(randomBird);
+        birdImage.alt = randomBird;
+        birdImage.style.transform = 'scale(1)';
+        if (!spotted.includes(randomBird)) {
+          spotted.push(randomBird);
+          localStorage.setItem('spottedBirds', JSON.stringify(spotted));
+        }
+        updateJournal();
+      }, 600);
+    }
+
+    spinBtn.addEventListener('click', spinBird);
+
+    journalHeader.addEventListener('click', () => {
+      journal.classList.toggle('collapsed');
+    });
+
+    updateJournal();
+  </script>
+</body>
+</html>

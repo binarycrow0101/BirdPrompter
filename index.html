@@ -63,7 +63,7 @@
       background: #f8f5e6;
       border: 2px solid #b6a77b;
       border-radius: 10px;
-      width: 220px;
+      width: 240px;
       max-height: 60vh;
       overflow-y: auto;
       transition: all 0.4s ease;
@@ -89,26 +89,13 @@
       padding: 10px;
       font-size: 0.9rem;
     }
-
-    .flicker {
-      animation: flicker 1s infinite;
-    }
-
-    @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-      }
-      20%, 24%, 55% {
-        opacity: 0.8;
-      }
-    }
   </style>
 </head>
 <body>
   <h1>Bird Spotter</h1>
 
   <div class="binocular-frame">
-    <img id="birdImage" class="bird flicker" src="https://placehold.co/200x100?text=Bird" alt="Bird">
+    <img id="birdImage" class="bird" src="https://placehold.co/200x100?text=Bird" alt="Bird">
   </div>
 
   <button class="spin-btn" id="spinBtn">Spot a Bird!</button>
@@ -120,11 +107,49 @@
 
   <script>
     const birds = [
-      "Robin", "Blackbird", "Blue Jay", "Cardinal", "Goldfinch", "Sparrow",
-      "Woodpecker", "Magpie", "Wren", "Crow", "Raven", "Chickadee", "Oriole",
-      "Warbler", "Nuthatch", "Swallow", "Titmouse", "Dove", "Hawk", "Eagle",
-      "Owl", "Kingfisher", "Heron", "Starling", "Lark", "Thrush", "Jay",
-      "Grosbeak", "Sandpiper", "Plover"
+      // 🇪🇺 European Birds
+      { name: "European Robin", region: "Europe" },
+      { name: "Eurasian Blue Tit", region: "Europe" },
+      { name: "Great Tit", region: "Europe" },
+      { name: "Blackbird", region: "Europe" },
+      { name: "Chaffinch", region: "Europe" },
+      { name: "European Goldfinch", region: "Europe" },
+      { name: "Eurasian Wren", region: "Europe" },
+      { name: "Magpie", region: "Europe" },
+      { name: "Jay", region: "Europe" },
+      { name: "Common Kingfisher", region: "Europe" },
+      { name: "Barn Owl", region: "Europe" },
+      { name: "Eurasian Nuthatch", region: "Europe" },
+      { name: "Song Thrush", region: "Europe" },
+      { name: "Starling", region: "Europe" },
+      { name: "Wood Pigeon", region: "Europe" },
+      { name: "Carrion Crow", region: "Europe" },
+      { name: "House Sparrow", region: "Europe" },
+      { name: "Pied Wagtail", region: "Europe" },
+      { name: "European Green Woodpecker", region: "Europe" },
+      { name: "Eurasian Bullfinch", region: "Europe" },
+
+      // 🇺🇸 North American Birds
+      { name: "Northern Cardinal", region: "North America" },
+      { name: "Blue Jay", region: "North America" },
+      { name: "American Robin", region: "North America" },
+      { name: "Black-capped Chickadee", region: "North America" },
+      { name: "American Goldfinch", region: "North America" },
+      { name: "Downy Woodpecker", region: "North America" },
+      { name: "Red-winged Blackbird", region: "North America" },
+      { name: "Baltimore Oriole", region: "North America" },
+      { name: "Eastern Bluebird", region: "North America" },
+      { name: "Tufted Titmouse", region: "North America" },
+      { name: "Mourning Dove", region: "North America" },
+      { name: "Northern Flicker", region: "North America" },
+      { name: "American Crow", region: "North America" },
+      { name: "Carolina Wren", region: "North America" },
+      { name: "White-breasted Nuthatch", region: "North America" },
+      { name: "Tree Swallow", region: "North America" },
+      { name: "Cedar Waxwing", region: "North America" },
+      { name: "Red-tailed Hawk", region: "North America" },
+      { name: "Great Horned Owl", region: "North America" },
+      { name: "American Kestrel", region: "North America" }
     ];
 
     let spotted = JSON.parse(localStorage.getItem('spottedBirds')) || [];
@@ -136,19 +161,23 @@
     const journalContent = document.getElementById('journalContent');
 
     function updateJournal() {
-      journalContent.innerHTML = spotted.length
-        ? spotted.map(b => `<div>🪶 ${b}</div>`).join('')
-        : '<em>No birds spotted yet.</em>';
+      if (!spotted.length) {
+        journalContent.innerHTML = '<em>No birds spotted yet.</em>';
+        return;
+      }
+      journalContent.innerHTML = spotted
+        .map(b => `<div>🪶 <strong>${b.name}</strong> <span style="color:#6a7c6e;">(${b.region})</span></div>`)
+        .join('');
     }
 
     function spinBird() {
       birdImage.style.transform = 'scale(0.8)';
       setTimeout(() => {
         const randomBird = birds[Math.floor(Math.random() * birds.length)];
-        birdImage.src = "https://placehold.co/200x100?text=" + encodeURIComponent(randomBird);
-        birdImage.alt = randomBird;
+        birdImage.src = "https://placehold.co/200x100?text=" + encodeURIComponent(randomBird.name);
+        birdImage.alt = randomBird.name;
         birdImage.style.transform = 'scale(1)';
-        if (!spotted.includes(randomBird)) {
+        if (!spotted.some(b => b.name === randomBird.name)) {
           spotted.push(randomBird);
           localStorage.setItem('spottedBirds', JSON.stringify(spotted));
         }
@@ -157,7 +186,6 @@
     }
 
     spinBtn.addEventListener('click', spinBird);
-
     journalHeader.addEventListener('click', () => {
       journal.classList.toggle('collapsed');
     });

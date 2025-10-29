@@ -144,6 +144,13 @@ const birds = [
   { name: "House Martin", region: "Europe", colour: "#2b3b57", habitat: "urban" },
   { name: "Eurasian Sparrowhawk", region: "Europe", colour: "#767676", habitat: "woodland" },
   { name: "Tawny Owl", region: "Europe", colour: "#8b6446", habitat: "woodland" },
+  { name: "Common Buzzard", region: "Europe", colour: "#9b7d5a", habitat: "farmland" },
+  { name: "Little Owl", region: "Europe", colour: "#c8b284", habitat: "farmland" },
+  { name: "Common Chiffchaff", region: "Europe", colour: "#d6d0a3", habitat: "woodland" },
+  { name: "Common Kingfisher", region: "Europe", colour: "#1d9edd", habitat: "rivers" },
+  { name: "Bearded Tit", region: "Europe", colour: "#e5b66d", habitat: "reed beds" },
+  { name: "Common Cuckoo", region: "Europe", colour: "#9b8c73", habitat: "woodland" },
+  { name: "Common Redstart", region: "Europe", colour: "#f07a3d", habitat: "woodland" },
 
   // 🇺🇸 North American Birds
   { name: "Northern Cardinal", region: "North America", colour: "#c41e3a", habitat: "gardens" },
@@ -185,9 +192,14 @@ const birds = [
   { name: "Brown Pelican", region: "North America", colour: "#a6927a", habitat: "coast" },
   { name: "Sandhill Crane", region: "North America", colour: "#a8a8a8", habitat: "wetlands" },
   { name: "Northern Harrier", region: "North America", colour: "#9c8a6d", habitat: "grasslands" },
-  { name: "American Bittern", region: "North America", colour: "#b38a4c", habitat: "marsh" }
+  { name: "American Bittern", region: "North America", colour: "#b38a4c", habitat: "marsh" },
+  { name: "Eastern Kingbird", region: "North America", colour: "#1f1f1f", habitat: "fields" },
+  { name: "Rose-breasted Grosbeak", region: "North America", colour: "#d1395e", habitat: "woodland" },
+  { name: "Indigo Bunting", region: "North America", colour: "#4b3cc7", habitat: "woodland" },
+  { name: "Scarlet Tanager", region: "North America", colour: "#e02020", habitat: "forest" },
+  { name: "Baltimore Oriole", region: "North America", colour: "#f47a1f", habitat: "forest edge" }
 ];
-
+  
 let spinning = false;
 let journal = JSON.parse(localStorage.getItem('birdJournal')) || [];
 
@@ -267,5 +279,6 @@ updateJournal();
 </script>
 </body>
 </html>
+
 
 

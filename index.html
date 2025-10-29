@@ -219,15 +219,14 @@ function spinBirds() {
   const spin = setInterval(() => {
     const randomBird = birds[Math.floor(Math.random() * birds.length)];
     birdCard.textContent = randomBird.name;
-    birdCard.style.background = randomBird.color;
-    birdCard.style.color = (randomBird.color === '#ffffff' || randomBird.color === '#dcdcdc') ? '#000' : '#fff';
-    birdCard.style.border = (randomBird.color === '#ffffff' || randomBird.color === '#dcdcdc') ? '2px solid #000' : 'none';
+    birdCard.style.background = randomBird.colour;
+    birdCard.style.color = (randomBird.colour === '#ffffff' || randomBird.colour === '#dcdcdc') ? '#000' : '#fff';
+    birdCard.style.border = (randomBird.colour === '#ffffff' || randomBird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
     birdCard.style.left = `${120 + Math.random() * 20}%`;
     birdCard.style.top = `${50 + (Math.random() * 10 - 5)}%`;
     const xMove = Math.random() * 1800;
     const yMove = (Math.random() - 0.5) * 400;
     birdCard.style.transform = `translate(${-xMove}px, ${yMove}px) rotate(${Math.random()*25-12}deg) scale(${1 + Math.random()*0.2})`;
-
 
     elapsed += interval;
     if (elapsed >= duration) {
@@ -240,9 +239,9 @@ function spinBirds() {
 function finalizeBird(bird) {
   spinning = false;
   birdCard.textContent = bird.name;
-  birdCard.style.background = bird.color;
-  birdCard.style.color = (bird.color === '#ffffff' || bird.color === '#dcdcdc') ? '#000' : '#fff';
-  birdCard.style.border = (bird.color === '#ffffff' || bird.color === '#dcdcdc') ? '2px solid #000' : 'none';
+  birdCard.style.background = bird.colour;
+  birdCard.style.color = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '#000' : '#fff';
+  birdCard.style.border = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
   birdCard.style.left = '50%';
   birdCard.style.top = '50%';
   birdCard.style.transform = 'translate(-50%, -50%) scale(1.2)';
@@ -268,8 +267,3 @@ updateJournal();
 </script>
 </body>
 </html>
-
-
-
-
-

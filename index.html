@@ -224,8 +224,8 @@ function spinBirds() {
     birdCard.style.border = (randomBird.colour === '#ffffff' || randomBird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
     birdCard.style.left = `${120 + Math.random() * 20}%`;
     birdCard.style.top = `${50 + (Math.random() * 10 - 5)}%`;
-    const xMove = Math.random() * 1800;
-    const yMove = (Math.random() - 0.5) * 400;
+    const xMove = Math.random() * 500;
+    const yMove = (Math.random() - 0.5) * 500;
     birdCard.style.transform = `translate(${-xMove}px, ${yMove}px) rotate(${Math.random()*25-12}deg) scale(${1 + Math.random()*0.2})`;
 
     elapsed += interval;
@@ -267,3 +267,4 @@ updateJournal();
 </script>
 </body>
 </html>
+

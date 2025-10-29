@@ -37,8 +37,39 @@
     }
 
     .bird {
-      transition: transform 0.8s ease, opacity 0.3s ease;
+      position: absolute;
       max-width: 70%;
+      opacity: 0;
+      transform: translateY(0) scale(0.9);
+      transition: opacity 0.3s ease, transform 0.4s ease;
+    }
+
+    .bird.enter {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    @keyframes flyPast {
+      0% {
+        transform: translateX(300px) scale(0.8);
+        opacity: 0;
+      }
+      40% {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+      }
+      60% {
+        transform: translateX(-50px) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-350px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    .fly {
+      animation: flyPast 0.4s ease-in-out forwards;
     }
 
     .spin-btn {
@@ -52,7 +83,6 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     .spin-btn:hover {
       background: #366046;
     }
@@ -95,7 +125,7 @@
 <body>
   <h1>Bird Spotter</h1>
 
-  <div class="binocular-frame">
+  <div class="binocular-frame" id="binocularFrame">
     <img id="birdImage" class="bird" src="https://placehold.co/200x100?text=Bird" alt="Bird">
   </div>
 
@@ -152,6 +182,7 @@
 
     let spotted = JSON.parse(localStorage.getItem('spottedBirds')) || [];
 
+    const binocularFrame = document.getElementById('binocularFrame');
     const birdImage = document.getElementById('birdImage');
     const spinBtn = document.getElementById('spinBtn');
     const journal = document.getElementById('journal');
@@ -170,41 +201,41 @@
 
     function spinBird() {
       spinBtn.disabled = true;
-      let spins = 15; // number of spins (frames)
-      let delay = 80; // initial speed
+      let cycles = 15;
+      let delay = 100;
 
-      function cycle() {
+      function flyPast() {
+        const tempBird = document.createElement('img');
         const randomBird = birds[Math.floor(Math.random() * birds.length)];
-        birdImage.style.opacity = 0.3;
-        setTimeout(() => {
-          birdImage.src = "https://placehold.co/200x100?text=" + encodeURIComponent(randomBird.name);
-          birdImage.alt = randomBird.name;
-          birdImage.style.opacity = 1;
-        }, 100);
+        tempBird.src = "https://placehold.co/200x100?text=" + encodeURIComponent(randomBird.name);
+        tempBird.classList.add('bird', 'fly');
+        binocularFrame.appendChild(tempBird);
 
-        spins--;
-        delay += 40;
+        tempBird.addEventListener('animationend', () => tempBird.remove());
 
-        if (spins > 0) {
-          setTimeout(cycle, delay);
+        cycles--;
+        delay += 60;
+
+        if (cycles > 0) {
+          setTimeout(flyPast, delay);
         } else {
           // Final chosen bird
           const chosen = birds[Math.floor(Math.random() * birds.length)];
           setTimeout(() => {
             birdImage.src = "https://placehold.co/200x100?text=" + encodeURIComponent(chosen.name);
             birdImage.alt = chosen.name;
-
+            birdImage.classList.add('enter');
             if (!spotted.some(b => b.name === chosen.name)) {
               spotted.push(chosen);
               localStorage.setItem('spottedBirds', JSON.stringify(spotted));
             }
             updateJournal();
             spinBtn.disabled = false;
-          }, 400);
+          }, 500);
         }
       }
 
-      cycle();
+      flyPast();
     }
 
     spinBtn.addEventListener('click', spinBird);

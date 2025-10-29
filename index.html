@@ -150,11 +150,9 @@ function spinBirds() {
     birdCard.style.background = randomBird.color;
     birdCard.style.color = (randomBird.color === '#ffffff' || randomBird.color === '#dcdcdc') ? '#000' : '#fff';
     birdCard.style.border = (randomBird.color === '#ffffff' || randomBird.color === '#dcdcdc') ? '2px solid #000' : 'none';
-    birdCard.style.left = `${150 + Math.random() * 50}%`;
-    birdCard.style.top = `${50 + (Math.random() * 20 - 10)}%`;
-    const xMove = Math.random() * 1800;
-    const yMove = (Math.random() - 0.5) * 400;
-    birdCard.style.transform = `translate(${-xMove}px, ${yMove}px) rotate(${Math.random()*25-12}deg) scale(${1 + Math.random()*0.2})`;
+    birdCard.style.left = `${120 + Math.random() * 20}%`;
+    birdCard.style.top = `${50 + (Math.random() * 10 - 5)}%`;
+    birdCard.style.transform = `translateX(-800px) rotate(${Math.random()*10-5}deg)`;
 
     elapsed += interval;
     if (elapsed >= duration) {
@@ -195,4 +193,5 @@ updateJournal();
 </script>
 </body>
 </html>
+
 

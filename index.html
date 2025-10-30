@@ -49,6 +49,7 @@
     transition: transform 0.3s ease;
   }
 
+  /* bounce when settling */
   .bird-card.bounce {
     transform: translate(-50%, -50%) scale(1.3);
   }
@@ -99,6 +100,7 @@
   <button id="resetJournal">Reset Journal</button>
 </div>
 
+<!-- Region Filter Buttons -->
 <div id="filters">
   <button class="filter-btn" data-region="All">All</button>
   <button class="filter-btn" data-region="Europe">Europe</button>
@@ -269,13 +271,14 @@ const journal = document.getElementById('journal');
 const journalList = document.getElementById('journalList');
 const toggleJournal = document.getElementById('toggleJournal');
 const resetJournal = document.getElementById('resetJournal');
-const spinBtn = document.getElementById('spinBtn');
 
-// Region Filter Setup
+// 🕊️ Region Filter Setup
 let currentRegion = localStorage.getItem('currentRegion') || "All";
 const filterButtons = document.querySelectorAll('.filter-btn');
 filterButtons.forEach(btn => {
-  if (btn.dataset.region === currentRegion) btn.style.background = '#4e7a61';
+  if (btn.dataset.region === currentRegion) {
+    btn.style.background = '#4e7a61';
+  }
   btn.addEventListener('click', () => {
     currentRegion = btn.dataset.region;
     localStorage.setItem('currentRegion', currentRegion);
@@ -330,49 +333,47 @@ function finalizeBird(bird) {
   birdCard.style.background = bird.colour;
   birdCard.style.color = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '#000' : '#fff';
   birdCard.style.border = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
-  birdCard.style.transform = 'translate(-50%, -50%) scale(1)';
+  birdCard.style.left = '50%';
+  birdCard.style.top = '50%';
+  birdCard.style.transform = 'translate(-50%, -50%) scale(1.2)';
+
+  // bounce effect
   birdCard.classList.add('bounce');
+  setTimeout(() => birdCard.classList.remove('bounce'), 300);
 
-  // Save to journal
-  addToJournal(bird);
-
-  setTimeout(() => birdCard.classList.remove('bounce'), 600);
-}
-
-function addToJournal(bird) {
-  const journalEntries = JSON.parse(localStorage.getItem('birdJournal') || '[]');
-  const timestamp = new Date().toLocaleTimeString();
-  const entry = `${bird.name} (${bird.region}) - ${bird.habitat} - ${timestamp}`;
-  journalEntries.unshift(entry);
-  localStorage.setItem('birdJournal', JSON.stringify(journalEntries));
-  updateJournal();
-}
-
-function updateJournal() {
-  const journalEntries = JSON.parse(localStorage.getItem('birdJournal') || '[]');
-  journalList.innerHTML = '';
-  journalEntries.forEach(entry => {
+  // save journal entry
+  const entries = JSON.parse(localStorage.getItem('birdJournal') || '[]');
+  const entry = `${bird.name} (${bird.region})`;
+  if (!entries.includes(entry)) {
+    entries.push(entry);
+    localStorage.setItem('birdJournal', JSON.stringify(entries));
     const li = document.createElement('li');
     li.textContent = entry;
+    journalList.appendChild(li);
+  }
+}
+
+function loadJournal() {
+  const entries = JSON.parse(localStorage.getItem('birdJournal') || '[]');
+  journalList.innerHTML = '';
+  entries.forEach(e => {
+    const li = document.createElement('li');
+    li.textContent = e;
     journalList.appendChild(li);
   });
 }
 
-toggleJournal.addEventListener('click', () => {
-  journal.classList.toggle('collapsed');
-});
-
+document.getElementById('spinBtn').addEventListener('click', spinBirds);
+toggleJournal.addEventListener('click', () => journal.classList.toggle('collapsed'));
 resetJournal.addEventListener('click', () => {
-  if (confirm("Clear your entire bird journal?")) {
+  if (confirm('Reset journal?')) {
     localStorage.removeItem('birdJournal');
-    updateJournal();
+    journalList.innerHTML = '';
   }
 });
 
-spinBtn.addEventListener('click', spinBirds);
-
-// Load existing journal
-updateJournal();
+loadJournal();
 </script>
 </body>
 </html>
+

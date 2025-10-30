@@ -51,8 +51,8 @@
   /* Sparkle / feather particles */
   .sparkle {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 16px; /* doubled size */
+    height: 16px; /* doubled size */
     background: radial-gradient(circle, white 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
@@ -325,43 +325,27 @@ function finalizeBird(bird) {
   birdCard.textContent = bird.name;
   birdCard.style.background = bird.colour;
   birdCard.style.color = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '#000' : '#fff';
-  birdCard.style.left = '50%';
-  birdCard.style.top = '50%';
-  birdCard.style.transform = 'translate(-50%, -50%) scale(1.1)';
 
-  // --- ✨ ADD SPARKLE / FEATHER EXPLOSION EFFECT ---
-  createSparkleEffect(birdCard, 25);
-  // -------------------------------------------------
+  // ✨ Sparkle effect at binocular center
+  const rect = binoculars.getBoundingClientRect();
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+
+  for (let i = 0; i < 25; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = `${centerX}px`;
+    sparkle.style.top = `${centerY}px`;
+    sparkle.style.transform = `translate(${(Math.random()-0.5)*200}px, ${(Math.random()-0.5)*200}px) scale(${Math.random()*1.5+1})`;
+    binoculars.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 1000);
+  }
 
   if (!journal.includes(bird.name)) {
     journal.push(bird.name);
     localStorage.setItem('birdJournal', JSON.stringify(journal));
-    updateJournal();
   }
-}
-
-function createSparkleEffect(target, count) {
-  const rect = target.getBoundingClientRect();
-  for (let i = 0; i < count; i++) {
-    const sparkle = document.createElement('div');
-    sparkle.classList.add('sparkle');
-    sparkle.style.left = `${rect.left + rect.width/2}px`;
-    sparkle.style.top = `${rect.top + rect.height/2}px`;
-    sparkle.style.position = 'fixed';
-    document.body.appendChild(sparkle);
-
-    const angle = Math.random() * 2 * Math.PI;
-    const distance = Math.random() * 80 + 20;
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
-
-    sparkle.animate([
-      { transform: `translate(0,0) scale(1)`, opacity: 1 },
-      { transform: `translate(${x}px, ${y}px) scale(0.5)`, opacity: 0 }
-    ], { duration: 800 + Math.random() * 400, easing: 'ease-out' });
-
-    setTimeout(() => sparkle.remove(), 1000);
-  }
+  updateJournal();
 }
 
 spinBtn.addEventListener('click', spinBirds);

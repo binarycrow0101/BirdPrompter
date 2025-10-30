@@ -22,7 +22,6 @@
     letter-spacing: 2px;
   }
 
-  /* Binoculars viewport */
   .binoculars {
     position: relative;
     width: 500px;
@@ -34,7 +33,6 @@
     box-shadow: 0 0 40px #000 inset, 0 0 10px #0f0f0f;
   }
 
-  /* Bird cards flying past */
   .bird-card {
     position: absolute;
     width: 200px;
@@ -50,7 +48,28 @@
     transition: transform 0.3s;
   }
 
-  /* Collapsible journal */
+  /* Sparkle / feather particles */
+  .sparkle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, white 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkleFade 1s ease-out forwards;
+  }
+
+  @keyframes sparkleFade {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2);
+    }
+  }
+
   #journal {
     background: rgba(255,255,255,0.1);
     width: 300px;
@@ -253,7 +272,7 @@ const birds = [
   { name: "White-bellied Sea Eagle", region: "Asia", colour: "#cfcfcf", habitat: "coast" },
   { name: "Crested Serpent Eagle", region: "Asia", colour: "#8b733d", habitat: "forest" }
 ];
-  
+
 let spinning = false;
 let journal = JSON.parse(localStorage.getItem('birdJournal')) || [];
 
@@ -279,7 +298,7 @@ function spinBirds() {
   spinning = true;
 
   let elapsed = 0;
-  const duration = 5000; // 5 seconds
+  const duration = 5000;
   const interval = 120;
 
   const spin = setInterval(() => {
@@ -287,7 +306,6 @@ function spinBirds() {
     birdCard.textContent = randomBird.name;
     birdCard.style.background = randomBird.colour;
     birdCard.style.color = (randomBird.colour === '#ffffff' || randomBird.colour === '#dcdcdc') ? '#000' : '#fff';
-    birdCard.style.border = (randomBird.colour === '#ffffff' || randomBird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
     birdCard.style.left = `${120 + Math.random() * 20}%`;
     birdCard.style.top = `${50 + (Math.random() * 10 - 5)}%`;
     const xMove = Math.random() * 1200;
@@ -307,10 +325,13 @@ function finalizeBird(bird) {
   birdCard.textContent = bird.name;
   birdCard.style.background = bird.colour;
   birdCard.style.color = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '#000' : '#fff';
-  birdCard.style.border = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
   birdCard.style.left = '50%';
   birdCard.style.top = '50%';
-  birdCard.style.transform = 'translate(-50%, -50%) scale(1.2)';
+  birdCard.style.transform = 'translate(-50%, -50%) scale(1.1)';
+
+  // --- ✨ ADD SPARKLE / FEATHER EXPLOSION EFFECT ---
+  createSparkleEffect(birdCard, 25);
+  // -------------------------------------------------
 
   if (!journal.includes(bird.name)) {
     journal.push(bird.name);
@@ -319,24 +340,39 @@ function finalizeBird(bird) {
   }
 }
 
+function createSparkleEffect(target, count) {
+  const rect = target.getBoundingClientRect();
+  for (let i = 0; i < count; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    sparkle.style.left = `${rect.left + rect.width/2}px`;
+    sparkle.style.top = `${rect.top + rect.height/2}px`;
+    sparkle.style.position = 'fixed';
+    document.body.appendChild(sparkle);
+
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * 80 + 20;
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance;
+
+    sparkle.animate([
+      { transform: `translate(0,0) scale(1)`, opacity: 1 },
+      { transform: `translate(${x}px, ${y}px) scale(0.5)`, opacity: 0 }
+    ], { duration: 800 + Math.random() * 400, easing: 'ease-out' });
+
+    setTimeout(() => sparkle.remove(), 1000);
+  }
+}
+
 spinBtn.addEventListener('click', spinBirds);
 toggleJournal.addEventListener('click', () => journalDiv.classList.toggle('collapsed'));
 resetJournal.addEventListener('click', () => {
-  if (confirm("Reset your Bird Journal?")) {
-    journal = [];
-    localStorage.removeItem('birdJournal');
-    updateJournal();
-  }
+  journal = [];
+  localStorage.removeItem('birdJournal');
+  updateJournal();
 });
 
 updateJournal();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-

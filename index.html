@@ -48,28 +48,6 @@
     transition: transform 0.3s;
   }
 
-  /* Sparkle / feather particles */
-  .sparkle {
-    position: absolute;
-    width: 16px; /* doubled size */
-    height: 16px; /* doubled size */
-    background: radial-gradient(circle, white 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    animation: sparkleFade 1s ease-out forwards;
-  }
-
-  @keyframes sparkleFade {
-    0% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(2);
-    }
-  }
-
   #journal {
     background: rgba(255,255,255,0.1);
     width: 300px;
@@ -277,7 +255,6 @@ let spinning = false;
 let journal = JSON.parse(localStorage.getItem('birdJournal')) || [];
 
 const birdCard = document.getElementById('birdCard');
-const binoculars = document.getElementById('binoculars');
 const journalList = document.getElementById('journalList');
 const spinBtn = document.getElementById('spinBtn');
 const toggleJournal = document.getElementById('toggleJournal');
@@ -325,35 +302,27 @@ function finalizeBird(bird) {
   birdCard.textContent = bird.name;
   birdCard.style.background = bird.colour;
   birdCard.style.color = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '#000' : '#fff';
-
-  // ✨ Sparkle effect at binocular center
-  const rect = binoculars.getBoundingClientRect();
-  const centerX = rect.width / 2;
-  const centerY = rect.height / 2;
-
-  for (let i = 0; i < 25; i++) {
-    const sparkle = document.createElement('div');
-    sparkle.className = 'sparkle';
-    sparkle.style.left = `${centerX}px`;
-    sparkle.style.top = `${centerY}px`;
-    sparkle.style.transform = `translate(${(Math.random()-0.5)*200}px, ${(Math.random()-0.5)*200}px) scale(${Math.random()*1.5+1})`;
-    binoculars.appendChild(sparkle);
-    setTimeout(() => sparkle.remove(), 1000);
-  }
-
+  
+  // Add bird to journal
   if (!journal.includes(bird.name)) {
     journal.push(bird.name);
     localStorage.setItem('birdJournal', JSON.stringify(journal));
+    updateJournal();
   }
-  updateJournal();
 }
 
 spinBtn.addEventListener('click', spinBirds);
-toggleJournal.addEventListener('click', () => journalDiv.classList.toggle('collapsed'));
+
+toggleJournal.addEventListener('click', () => {
+  journalDiv.classList.toggle('collapsed');
+});
+
 resetJournal.addEventListener('click', () => {
-  journal = [];
-  localStorage.removeItem('birdJournal');
-  updateJournal();
+  if (confirm("Reset your bird journal?")) {
+    journal = [];
+    localStorage.removeItem('birdJournal');
+    updateJournal();
+  }
 });
 
 updateJournal();

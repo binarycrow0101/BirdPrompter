@@ -98,6 +98,15 @@
   <button id="resetJournal">Reset Journal</button>
 </div>
 
+<!-- Region Filter Buttons -->
+<div id="filters">
+  <button class="filter-btn" data-region="All">All</button>
+  <button class="filter-btn" data-region="Europe">Europe</button>
+  <button class="filter-btn" data-region="North America">North America</button>
+  <button class="filter-btn" data-region="Asia">Asia</button>
+  <button class="filter-btn" data-region="Oceania">Oceania</button>
+</div>
+
 <div id="journal" class="collapsed">
   <h3>Bird Journal</h3>
   <ul id="journalList"></ul>
@@ -200,7 +209,7 @@ const birds = [
   { name: "Scarlet Tanager", region: "North America", colour: "#e02020", habitat: "forest" },
   { name: "Baltimore Oriole", region: "North America", colour: "#f47a1f", habitat: "forest edge" },
 
-    // 🦘 Oceania Birds
+  // 🦘 Oceania Birds
   { name: "Rainbow Lorikeet", region: "Oceania", colour: "#2b8c3a", habitat: "urban" },
   { name: "Superb Fairywren", region: "Oceania", colour: "#3a6ff2", habitat: "shrubs" },
   { name: "Kookaburra", region: "Oceania", colour: "#b89c72", habitat: "woodland" },
@@ -214,130 +223,121 @@ const birds = [
   { name: "Tui", region: "Oceania", colour: "#223040", habitat: "forest" },
   { name: "Kea", region: "Oceania", colour: "#647c2e", habitat: "alpine forest" },
   { name: "Fantail", region: "Oceania", colour: "#8c6e4f", habitat: "woodland" },
-  { name: "New Zealand Kākā", region: "Oceania", colour: "#a8593b", habitat: "forest" },
-  { name: "White-faced Heron", region: "Oceania", colour: "#a4aab8", habitat: "wetlands" },
-  { name: "Masked Lapwing", region: "Oceania", colour: "#f1e379", habitat: "grasslands" },
-  { name: "Australian King Parrot", region: "Oceania", colour: "#d03c2b", habitat: "rainforest" },
-  { name: "Crimson Rosella", region: "Oceania", colour: "#c9383b", habitat: "forest" },
-  { name: "Brolga", region: "Oceania", colour: "#b7b7b7", habitat: "wetlands" },
-  { name: "Major Mitchell's Cockatoo", region: "Oceania", colour: "#f9d6c2", habitat: "desert" },
-  
-  // 🐉 Asian Birds
-  { name: "Oriental Magpie Robin", region: "Asia", colour: "#222222", habitat: "urban" },
-  { name: "Indian Peafowl", region: "Asia", colour: "#2167a6", habitat: "forest edge" },
-  { name: "Red-whiskered Bulbul", region: "Asia", colour: "#b63b3b", habitat: "gardens" },
-  { name: "White-throated Kingfisher", region: "Asia", colour: "#1a8ed1", habitat: "wetlands" },
-  { name: "Oriental White-eye", region: "Asia", colour: "#cddc39", habitat: "forest" },
-  { name: "Black Drongo", region: "Asia", colour: "#0d0d0d", habitat: "fields" },
-  { name: "Common Myna", region: "Asia", colour: "#7b5d2d", habitat: "urban" },
-  { name: "Eurasian Hoopoe", region: "Asia", colour: "#d19e5c", habitat: "dry grasslands" },
-  { name: "Coppersmith Barbet", region: "Asia", colour: "#4caf50", habitat: "urban" },
-  { name: "White Wagtail", region: "Asia", colour: "#e8e8e8", habitat: "fields" },
-  { name: "Indian Roller", region: "Asia", colour: "#4ab2c4", habitat: "open country" },
-  { name: "Oriental Turtle Dove", region: "Asia", colour: "#b39c8f", habitat: "woodland" },
-  { name: "Golden Pheasant", region: "Asia", colour: "#f5b800", habitat: "mountains" },
-  { name: "Azure-winged Magpie", region: "Asia", colour: "#9bb7e0", habitat: "forest" },
-  { name: "Japanese White-eye", region: "Asia", colour: "#b5c52f", habitat: "gardens" },
-  { name: "Sarus Crane", region: "Asia", colour: "#d47b6b", habitat: "wetlands" },
-  { name: "Greater Coucal", region: "Asia", colour: "#73332d", habitat: "fields" },
-  { name: "Oriental Pied Hornbill", region: "Asia", colour: "#2b2b2b", habitat: "tropical forest" },
-  { name: "Chestnut Munia", region: "Asia", colour: "#7a4222", habitat: "grasslands" },
-  { name: "Grey Heron", region: "Asia", colour: "#9da4aa", habitat: "wetlands" },
-  { name: "Mandarin Duck", region: "Asia", colour: "#d67c33", habitat: "rivers" },
-  { name: "Jungle Babbler", region: "Asia", colour: "#9d8c74", habitat: "urban" },
-  { name: "Himalayan Monal", region: "Asia", colour: "#2c6b7b", habitat: "alpine forest" },
-  { name: "Green Bee-eater", region: "Asia", colour: "#3dbb3d", habitat: "open country" },
-  { name: "Painted Stork", region: "Asia", colour: "#e7a8a1", habitat: "wetlands" },
-  { name: "Grey-headed Canary Flycatcher", region: "Asia", colour: "#d6d640", habitat: "forest" },
-  { name: "Red Junglefowl", region: "Asia", colour: "#c6481f", habitat: "forest edge" },
-  { name: "Spotted Dove", region: "Asia", colour: "#cbbca7", habitat: "urban" },
-  { name: "White-bellied Sea Eagle", region: "Asia", colour: "#cfcfcf", habitat: "coast" },
-  { name: "Crested Serpent Eagle", region: "Asia", colour: "#8b733d", habitat: "forest" }
+  { name: "New Zealand Kākā", region: "Oceania", colour: "#a05a32", habitat: "forest" },
+  { name: "Weka", region: "Oceania", colour: "#7a5135", habitat: "coastal scrub" },
+  { name: "Bellbird", region: "Oceania", colour: "#8da963", habitat: "forest" },
+  { name: "Yellow-eyed Penguin", region: "Oceania", colour: "#d9c97d", habitat: "coast" },
+  { name: "Kākāpō", region: "Oceania", colour: "#91b35e", habitat: "forest" },
+  { name: "Morepork", region: "Oceania", colour: "#715b45", habitat: "forest" },
+  { name: "Black Swan", region: "Oceania", colour: "#111111", habitat: "lakes" },
+
+  // 🌏 Asian Birds
+  { name: "Oriental Magpie Robin", region: "Asia", colour: "#2f2f2f", habitat: "urban" },
+  { name: "Indian Peafowl", region: "Asia", colour: "#2e56c2", habitat: "forest" },
+  { name: "Eurasian Hoopoe", region: "Asia", colour: "#d69841", habitat: "grasslands" },
+  { name: "White-throated Kingfisher", region: "Asia", colour: "#2f9ac9", habitat: "wetlands" },
+  { name: "Great Hornbill", region: "Asia", colour: "#f4ca41", habitat: "forest" },
+  { name: "Asian Koel", region: "Asia", colour: "#131313", habitat: "urban" },
+  { name: "Red-whiskered Bulbul", region: "Asia", colour: "#b64848", habitat: "gardens" },
+  { name: "House Crow", region: "Asia", colour: "#444444", habitat: "urban" },
+  { name: "Coppersmith Barbet", region: "Asia", colour: "#86c150", habitat: "woodland" },
+  { name: "Black Drongo", region: "Asia", colour: "#1b1b1b", habitat: "fields" },
+  { name: "Indian Roller", region: "Asia", colour: "#4794e6", habitat: "open fields" },
+  { name: "Rose-ringed Parakeet", region: "Asia", colour: "#77b84c", habitat: "urban" },
+  { name: "Common Myna", region: "Asia", colour: "#7a613b", habitat: "urban" },
+  { name: "Purple Sunbird", region: "Asia", colour: "#382b91", habitat: "gardens" },
+  { name: "Asian Paradise Flycatcher", region: "Asia", colour: "#f1f1f1", habitat: "forest" },
+  { name: "Greater Coucal", region: "Asia", colour: "#8c3929", habitat: "scrubland" },
+  { name: "Indian Pond Heron", region: "Asia", colour: "#c1b08f", habitat: "wetlands" },
+  { name: "Little Egret", region: "Asia", colour: "#ffffff", habitat: "wetlands" },
+  { name: "Eurasian Tree Sparrow", region: "Asia", colour: "#957d5f", habitat: "urban" },
+  { name: "Spotted Dove", region: "Asia", colour: "#b2a092", habitat: "urban" },
 ];
-  
-let spinning = false;
-let journal = JSON.parse(localStorage.getItem('birdJournal')) || [];
 
 const birdCard = document.getElementById('birdCard');
-const binoculars = document.getElementById('binoculars');
+const journal = document.getElementById('journal');
 const journalList = document.getElementById('journalList');
-const spinBtn = document.getElementById('spinBtn');
 const toggleJournal = document.getElementById('toggleJournal');
 const resetJournal = document.getElementById('resetJournal');
-const journalDiv = document.getElementById('journal');
 
-function updateJournal() {
+// 🕊️ Region Filter Setup
+let currentRegion = localStorage.getItem('currentRegion') || "All";
+const filterButtons = document.querySelectorAll('.filter-btn');
+filterButtons.forEach(btn => {
+  if (btn.dataset.region === currentRegion) {
+    btn.style.background = '#4e7a61';
+  }
+  btn.addEventListener('click', () => {
+    currentRegion = btn.dataset.region;
+    localStorage.setItem('currentRegion', currentRegion);
+    filterButtons.forEach(b => b.style.background = '#3a5f4b');
+    btn.style.background = '#4e7a61';
+  });
+});
+
+function spinBirds() {
+  const filteredBirds = currentRegion === "All"
+    ? birds
+    : birds.filter(b => b.region === currentRegion);
+
+  if (filteredBirds.length === 0) {
+    alert(`No birds found for ${currentRegion}!`);
+    return;
+  }
+
+  const randomBird = filteredBirds[Math.floor(Math.random() * filteredBirds.length)];
+
+  birdCard.style.background = randomBird.colour;
+  birdCard.textContent = randomBird.name;
+  birdCard.style.left = '-250px';
+
+  const anim = birdCard.animate([
+    { transform: 'translateX(600px)' },
+    { transform: 'translateX(-600px)' }
+  ], {
+    duration: 2000,
+    iterations: 1
+  });
+
+  anim.onfinish = () => {
+    birdCard.textContent = randomBird.name;
+    addToJournal(randomBird);
+  };
+}
+
+function addToJournal(bird) {
+  const li = document.createElement('li');
+  li.textContent = `${bird.name} (${bird.region})`;
+  journalList.appendChild(li);
+  saveJournal();
+}
+
+function saveJournal() {
+  const entries = [];
+  journalList.querySelectorAll('li').forEach(li => entries.push(li.textContent));
+  localStorage.setItem('birdJournal', JSON.stringify(entries));
+}
+
+function loadJournal() {
+  const entries = JSON.parse(localStorage.getItem('birdJournal') || '[]');
   journalList.innerHTML = '';
-  journal.forEach(bird => {
+  entries.forEach(e => {
     const li = document.createElement('li');
-    li.textContent = bird;
+    li.textContent = e;
     journalList.appendChild(li);
   });
 }
 
-function spinBirds() {
-  if (spinning) return;
-  spinning = true;
-
-  let elapsed = 0;
-  const duration = 5000; // 5 seconds
-  const interval = 120;
-
-  const spin = setInterval(() => {
-    const randomBird = birds[Math.floor(Math.random() * birds.length)];
-    birdCard.textContent = randomBird.name;
-    birdCard.style.background = randomBird.colour;
-    birdCard.style.color = (randomBird.colour === '#ffffff' || randomBird.colour === '#dcdcdc') ? '#000' : '#fff';
-    birdCard.style.border = (randomBird.colour === '#ffffff' || randomBird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
-    birdCard.style.left = `${120 + Math.random() * 20}%`;
-    birdCard.style.top = `${50 + (Math.random() * 10 - 5)}%`;
-    const xMove = Math.random() * 1200;
-    const yMove = (Math.random() - 0.5) * 500;
-    birdCard.style.transform = `translate(${-xMove}px, ${yMove}px) rotate(${Math.random()*25-12}deg) scale(${1 + Math.random()*0.2})`;
-
-    elapsed += interval;
-    if (elapsed >= duration) {
-      clearInterval(spin);
-      setTimeout(() => finalizeBird(randomBird), 300);
-    }
-  }, interval);
-}
-
-function finalizeBird(bird) {
-  spinning = false;
-  birdCard.textContent = bird.name;
-  birdCard.style.background = bird.colour;
-  birdCard.style.color = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '#000' : '#fff';
-  birdCard.style.border = (bird.colour === '#ffffff' || bird.colour === '#dcdcdc') ? '2px solid #000' : 'none';
-  birdCard.style.left = '50%';
-  birdCard.style.top = '50%';
-  birdCard.style.transform = 'translate(-50%, -50%) scale(1.2)';
-
-  if (!journal.includes(bird.name)) {
-    journal.push(bird.name);
-    localStorage.setItem('birdJournal', JSON.stringify(journal));
-    updateJournal();
-  }
-}
-
-spinBtn.addEventListener('click', spinBirds);
-toggleJournal.addEventListener('click', () => journalDiv.classList.toggle('collapsed'));
+document.getElementById('spinBtn').addEventListener('click', spinBirds);
+toggleJournal.addEventListener('click', () => journal.classList.toggle('collapsed'));
 resetJournal.addEventListener('click', () => {
-  if (confirm("Reset your Bird Journal?")) {
-    journal = [];
+  if (confirm('Reset journal?')) {
     localStorage.removeItem('birdJournal');
-    updateJournal();
+    journalList.innerHTML = '';
   }
 });
 
-updateJournal();
+loadJournal();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
